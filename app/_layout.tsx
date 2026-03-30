@@ -13,6 +13,13 @@ if (!publishableKey) {
   throw new Error('Add your Clerk Publishable Key to the .env file');
 }
 
+/**
+ * Renders the app's root navigation Stack once fonts and authentication have finished loading.
+ *
+ * When both font assets and Clerk authentication state are ready, the native splash screen is hidden and the navigation Stack is mounted with headers disabled.
+ *
+ * @returns The root `Stack` element when fonts and auth are ready, `null` otherwise.
+ */
 function RootLayoutContent() {
   const { isLoaded: authLoaded } = useAuth();
 
@@ -38,6 +45,11 @@ function RootLayoutContent() {
   return <Stack screenOptions={{ headerShown: false }} />;
 }
 
+/**
+ * Provides the application root wrapped with Clerk authentication context.
+ *
+ * @returns The root React element wrapped in a `ClerkProvider` configured with the publishable key and token cache.
+ */
 export default function RootLayout() {
   return (
       <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>

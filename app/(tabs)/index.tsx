@@ -15,6 +15,11 @@ import { useUser } from "@clerk/expo";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
+/**
+ * Render the Home screen containing the user header, account balance, upcoming renewals carousel, and the list of all subscriptions.
+ *
+ * @returns The rendered React element representing the Home screen UI.
+ */
 export default function App() {
   const { user } = useUser();
   const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<string | null>(null);
