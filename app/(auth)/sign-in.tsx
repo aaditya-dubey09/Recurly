@@ -77,7 +77,12 @@ const SignIn = () => {
     };
 
     const handleVerify = async () => {
-        await signIn.mfa.verifyEmailCode({ code });
+        const { error } = await signIn.mfa.verifyEmailCode({ code });
+
+        if (error) {
+            console.error('Verification failed:', JSON.stringify(error, null, 2));
+            return;
+        }
 
         if (signIn.status === 'complete') {
             await signIn.finalize({
@@ -107,7 +112,7 @@ const SignIn = () => {
     };
 
     // Show verification screen if client trust is needed
-    if (signIn.status === 'needs_client_trust') {
+    if (signIn?.status === 'needs_client_trust') {
         return (
             <SafeAreaView className="auth-safe-area">
                 <KeyboardAvoidingView

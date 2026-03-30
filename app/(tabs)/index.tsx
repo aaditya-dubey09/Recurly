@@ -1,17 +1,17 @@
-import "@/global.css"
-import { FlatList, Image, Text, View } from "react-native";
-import { styled } from "nativewind";
-import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
-import images from "@/assets/constants/images";
-import { HOME_BALANCE, HOME_SUBSCRIPTIONS, HOME_USER, UPCOMING_SUBSCRIPTIONS } from "@/assets/constants/data";
-import { icons } from "@/assets/constants/icons";
-import { formatCurrency } from "@/lib/utils";
-import dayjs from "dayjs";
 import ListHeading from "@/components/ListHeading";
-import UpcomingSubscriptionCard from "@/components/UpcomingSubscriptionCard";
 import SubscriptionCard from "@/components/SubscriptionCard";
-import { useState } from "react";
+import UpcomingSubscriptionCard from "@/components/UpcomingSubscriptionCard";
+import { HOME_BALANCE, HOME_SUBSCRIPTIONS, UPCOMING_SUBSCRIPTIONS } from "@/constants/data";
+import { icons } from "@/constants/icons";
+import images from "@/constants/images";
+import "@/global.css";
+import { formatCurrency } from "@/lib/utils";
 import { useUser } from "@clerk/expo";
+import dayjs from "dayjs";
+import { styled } from "nativewind";
+import { useState } from "react";
+import { FlatList, Image, Text, View } from "react-native";
+import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
 

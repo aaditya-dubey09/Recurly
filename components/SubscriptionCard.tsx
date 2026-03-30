@@ -47,7 +47,7 @@ const SubscriptionCard = ({ name, price, currency, icon, billing, color, categor
                                     numberOfLines={1}
                                     ellipsizeMode='tail'
                                 >
-                                    {paymentMethod?.trim() ?? 'Not provided'}
+                                    {paymentMethod?.trim() || 'Not provided'}
                                 </Text>
                             </View>
                         </View>
@@ -62,7 +62,7 @@ const SubscriptionCard = ({ name, price, currency, icon, billing, color, categor
                                     numberOfLines={1}
                                     ellipsizeMode='tail'
                                 >
-                                    {(category?.trim() || plan?.trim()) ?? 'Not provided'}
+                                    {(category?.trim() || plan?.trim()) || 'Not provided'}
                                 </Text>
                             </View>
                         </View>

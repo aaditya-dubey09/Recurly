@@ -1,8 +1,8 @@
-import { Text, View, Pressable, Image } from 'react-native'
-import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
-import { styled } from "nativewind";
+import images from '@/constants/images';
 import { useClerk, useUser } from '@clerk/expo';
-import images from '@/assets/constants/images';
+import { styled } from "nativewind";
+import { Image, Pressable, Text, View } from 'react-native';
+import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 const SafeAreaView = styled(RNSafeAreaView);
 
 const Settings = () => {
