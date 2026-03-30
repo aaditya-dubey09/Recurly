@@ -3,7 +3,7 @@ import React from 'react'
 import { Image } from 'react-native'
 import { formatCurrency } from '@/lib/utils'
 
-const UpcomingSubscriptionCard = ({ name, price, daysLeft, icon }: UpcomingSubscription) => {
+const UpcomingSubscriptionCard = ({ name, price, daysLeft, icon, currency }: UpcomingSubscription) => {
     return (
         <View className='upcoming-card'>
             <View className='upcoming-row'>
@@ -12,8 +12,10 @@ const UpcomingSubscriptionCard = ({ name, price, daysLeft, icon }: UpcomingSubsc
                     className='upcoming-icon'
                 />
                 <View>
-                    <Text className='upcoming-price'>{formatCurrency(price)}</Text>
-                    <Text className='upcoming-meta'>{daysLeft > 1 ? `${daysLeft} days left` : 'Last day'}</Text>
+                    <Text className='upcoming-price'>{formatCurrency(price, currency)}</Text>
+                    <Text className='upcoming-meta'>
+                        {daysLeft > 1 ? `${daysLeft} days left` : 'Last day'}
+                    </Text>
                 </View>
             </View>
             <Text

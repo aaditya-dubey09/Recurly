@@ -1,21 +1,26 @@
-import "@/global.css"
-import { FlatList, Image, Text, View } from "react-native";
-import { styled } from "nativewind";
-import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
-import images from "@/assets/constants/images";
-import { HOME_BALANCE, HOME_SUBSCRIPTIONS, HOME_USER, UPCOMING_SUBSCRIPTIONS } from "@/assets/constants/data";
-import { icons } from "@/assets/constants/icons";
-import { formatCurrency } from "@/lib/utils";
-import dayjs from "dayjs";
 import ListHeading from "@/components/ListHeading";
-import UpcomingSubscriptionCard from "@/components/UpcomingSubscriptionCard";
 import SubscriptionCard from "@/components/SubscriptionCard";
+import UpcomingSubscriptionCard from "@/components/UpcomingSubscriptionCard";
+import { HOME_BALANCE, HOME_SUBSCRIPTIONS, UPCOMING_SUBSCRIPTIONS } from "@/constants/data";
+import { icons } from "@/constants/icons";
+import images from "@/constants/images";
+import "@/global.css";
+import { formatCurrency } from "@/lib/utils";
+import { useUser } from "@clerk/expo";
+import dayjs from "dayjs";
+import { styled } from "nativewind";
 import { useState } from "react";
+import { FlatList, Image, Text, View } from "react-native";
+import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
 export default function App() {
+  const { user } = useUser();
   const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<string | null>(null);
+
+  // Get user display name: firstName, fullName, or email
+  const displayName = user?.firstName || user?.fullName || user?.emailAddresses[0]?.emailAddress || 'User';
 
   return (
     <SafeAreaView className="flex-1 bg-background p-5">
@@ -25,10 +30,10 @@ export default function App() {
             <View className="home-header">
               <View className="home-user">
                 <Image
-                  source={images.avatar}
+                  source={user?.imageUrl ? { uri: user.imageUrl } : images.avatar}
                   className="home-avatar"
                 />
-                <Text className="home-user-name">{HOME_USER.name}</Text>
+                <Text className="home-user-name">{displayName}</Text>
               </View>
               <Image
                 source={icons.add}
@@ -37,7 +42,7 @@ export default function App() {
             </View>
 
             <View className="home-balance-card">
-              <Text className="home-balance-label">Balanace</Text>
+              <Text className="home-balance-label">Balance</Text>
               <View className="home-balance-row">
                 <Text className="home-balance-amount">
                   {formatCurrency(HOME_BALANCE.amount)}
@@ -48,7 +53,7 @@ export default function App() {
               </View>
             </View>
 
-            <View className="mb-5">
+            <View>
               <ListHeading title="Upcoming" />
               <FlatList
                 data={UPCOMING_SUBSCRIPTIONS}
