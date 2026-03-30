@@ -22,11 +22,11 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <Stack screenOptions={{ headerShown: false }} />
+    // <Stack screenOptions={{ headerShown: false }} />
     // ============ OR =================
-    // <Stack screenOptions={{ headerShown: false }} >
-    //   <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    //   <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-    // </Stack>
+    <Stack screenOptions={{ headerShown: false }} >
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+    </Stack>
   );
 }
