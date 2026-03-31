@@ -15,8 +15,8 @@ const Settings = () => {
     const handleSignOut = async () => {
         try {
             posthog.capture('sign_out_clicked');
-            posthog.reset();
             await signOut();
+            posthog.reset();
         } catch (error) {
             console.error('Error signing out:', error);
         }

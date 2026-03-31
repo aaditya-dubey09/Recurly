@@ -50,6 +50,21 @@
     "file": "app/(tabs)/settings.tsx"
   },
   {
+    "event": "subscription_expanded",
+    "description": "Fired when the user expands a subscription card on the Home screen to see more details. Includes subscription_id property.",
+    "file": "app/(tabs)/index.tsx"
+  },
+  {
+    "event": "subscription_collapsed",
+    "description": "Fired when the user collapses an expanded subscription card on the Home screen. Includes subscription_id property.",
+    "file": "app/(tabs)/index.tsx"
+  },
+  {
+    "event": "subscription_created",
+    "description": "Fired when a user creates a new subscription from the Home screen modal. Includes subscription metadata properties.",
+    "file": "app/(tabs)/index.tsx"
+  },
+  {
     "event": "subscription_card_expanded",
     "description": "Fired when the user expands a subscription card on the Home screen to see more details. Includes subscription_id property.",
     "file": "app/(tabs)/index.tsx"

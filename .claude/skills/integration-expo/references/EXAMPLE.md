@@ -1,6 +1,6 @@
 # PostHog Expo Example Project
 
-Repository: https://github.com/PostHog/context-mill
+Repository: <https://github.com/PostHog/context-mill>
 Path: basics/expo
 
 ---
@@ -24,7 +24,7 @@ A React Native Expo app demonstrating PostHog product analytics integration with
 
 ## Project Structure
 
-```
+```text
 basics/expo/
 ├── app/                          # Expo Router screens (file-based routing)
 │   ├── _layout.tsx               # Root layout with PostHogProvider + AuthProvider
@@ -59,6 +59,7 @@ basics/expo/
 **For Android builds:** Set environment variables (required):
 
 Add to `~/.zshrc` or `~/.bashrc`:
+
 ```bash
 # Java from Android Studio (required for Gradle)
 export JAVA_HOME="<path-to-android-studio-jdk>"
@@ -68,6 +69,7 @@ export ANDROID_HOME="$HOME/Library/Android/sdk"
 ```
 
 Examples:
+
 - `export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"`
 - `export ANDROID_HOME="$HOME/Library/Android/sdk"`
 
@@ -76,20 +78,23 @@ Then run `source ~/.zshrc` to apply.
 ### Installation
 
 1. Install dependencies:
+
    ```bash
    cd basics/expo
    npm install
    ```
 
 2. Configure PostHog (optional):
+
    ```bash
    cp .env.example .env
    # Edit .env with your PostHog project token
    ```
 
 3. Start the development server:
+
    ```bash
-   npx expo start
+   npx expo start-Where possible, add calls for PostHog's identify() function on the client side upon events like logins and signups. Use the contents of login and signup forms to identify users on submit. If there is server-side code, pass the client-side session and distinct ID to the server-side code to identify the user. On the server side, make sure events have a matching distinct ID where relevant.
    ```
 
 ### Running the App
@@ -248,7 +253,7 @@ POSTHOG_HOST=https://us.i.posthog.com
 
 ## .npmrc
 
-```
+```ini
 legacy-peer-deps=true
 
 ```
@@ -1187,7 +1192,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext
+    <AuthContext.Provider
       value={{
         user,
         isLoading,
@@ -1197,7 +1202,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }}
     >
       {children}
-    </AuthContext>
+    </AuthContext.Provider>
   )
 }
 
@@ -1425,4 +1430,3 @@ export const shadows = {
 ```
 
 ---
-

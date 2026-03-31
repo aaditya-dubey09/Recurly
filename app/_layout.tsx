@@ -1,11 +1,11 @@
-import { SplashScreen, Stack, usePathname, useSegments } from "expo-router";
+import { posthog } from '@/config/posthog';
 import '@/global.css';
-import { useFonts } from "expo-font";
-import { useEffect } from "react";
 import { ClerkProvider, useAuth } from '@clerk/expo';
 import { tokenCache } from '@clerk/expo/token-cache';
+import { useFonts } from "expo-font";
+import { SplashScreen, Stack, usePathname } from "expo-router";
 import { PostHogProvider } from 'posthog-react-native';
-import { posthog } from '@/config/posthog';
+import { useEffect } from "react";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,7 +26,6 @@ if (!publishableKey) {
 function RootLayoutContent() {
   const { isLoaded: authLoaded } = useAuth();
   const pathname = usePathname();
-  const segments = useSegments();
 
   const [fontsLoaded] = useFonts({
     'sans-regular': require('../assets/fonts/PlusJakartaSans-Regular.ttf'),
@@ -46,7 +45,7 @@ function RootLayoutContent() {
 
   useEffect(() => {
     posthog.screen(pathname);
-  }, [pathname, segments])
+  }, [pathname])
 
   // Don't render app until both are ready
   if (!fontsLoaded || !authLoaded) return null;
@@ -62,10 +61,10 @@ function RootLayoutContent() {
 
 export default function RootLayout() {
   return (
-      <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-        <PostHogProvider client={posthog}>
-          <RootLayoutContent />
-        </PostHogProvider>
-      </ClerkProvider>
+    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+      <PostHogProvider client={posthog}>
+        <RootLayoutContent />
+      </PostHogProvider>
+    </ClerkProvider>
   );
 }

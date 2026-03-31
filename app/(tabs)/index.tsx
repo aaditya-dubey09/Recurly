@@ -1,20 +1,20 @@
-import "@/global.css"
+import CreateSubscriptionModal from "@/components/CreateSubscriptionModal";
+import ListHeading from "@/components/ListHeading";
+import SubscriptionCard from "@/components/SubscriptionCard";
+import UpcomingSubscriptionCard from "@/components/UpcomingSubscriptionCard";
+import { HOME_BALANCE } from "@/constants/data";
+import { icons } from "@/constants/icons";
+import images from "@/constants/images";
+import "@/global.css";
+import { useSubscriptionStore } from "@/lib/subscriptionStore";
+import { formatCurrency } from "@/lib/utils";
+import { useUser } from '@clerk/expo';
+import dayjs from "dayjs";
+import { styled } from "nativewind";
+import { usePostHog } from 'posthog-react-native';
+import { useMemo, useState } from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
-import { styled } from "nativewind";
-import images from "@/constants/images";
-import { HOME_BALANCE, UPCOMING_SUBSCRIPTIONS } from "@/constants/data";
-import { icons } from "@/constants/icons";
-import { formatCurrency } from "@/lib/utils";
-import dayjs from "dayjs";
-import ListHeading from "@/components/ListHeading";
-import UpcomingSubscriptionCard from "@/components/UpcomingSubscriptionCard";
-import SubscriptionCard from "@/components/SubscriptionCard";
-import CreateSubscriptionModal from "@/components/CreateSubscriptionModal";
-import { useState, useMemo } from "react";
-import { useUser } from '@clerk/expo';
-import { usePostHog } from 'posthog-react-native';
-import { useSubscriptionStore } from "@/lib/subscriptionStore";
 const SafeAreaView = styled(RNSafeAreaView);
 
 /**
@@ -34,11 +34,21 @@ export default function App() {
   const upcomingSubscriptions = useMemo(() => {
     const now = dayjs();
     const nextWeek = now.add(7, 'days');
-    return subscriptions.filter(sub =>
-      sub.status === 'active' &&
-      dayjs(sub.renewalDate).isAfter(now) &&
-      dayjs(sub.renewalDate).isBefore(nextWeek)
-    ).sort((a, b) => dayjs(a.renewalDate).diff(dayjs(b.renewalDate)));
+    return subscriptions
+      .filter((sub) =>
+        sub.status === 'active' &&
+        dayjs(sub.renewalDate).isAfter(now) &&
+        dayjs(sub.renewalDate).isBefore(nextWeek)
+      )
+      .sort((a, b) => dayjs(a.renewalDate).diff(dayjs(b.renewalDate)))
+      .map((sub) => ({
+        id: sub.id,
+        icon: sub.icon,
+        name: sub.name,
+        price: sub.price,
+        currency: sub.currency,
+        daysLeft: Math.max(1, dayjs(sub.renewalDate).startOf('day').diff(now.startOf('day'), 'day')),
+      }));
   }, [subscriptions]);
 
   const handleSubscriptionPress = (item: Subscription) => {
@@ -56,7 +66,7 @@ export default function App() {
       subscription_name: newSubscription.name,
       subscription_price: newSubscription.price,
       subscription_frequency: newSubscription.subscription_frequency || newSubscription.billing,
-      category: newSubscription.category || 'Other',
+      subscription_category: newSubscription.category || 'Other',
     });
   };
 
@@ -98,7 +108,7 @@ export default function App() {
             <View className="mb-5">
               <ListHeading title="Upcoming" />
               <FlatList
-                data={UPCOMING_SUBSCRIPTIONS}
+                data={upcomingSubscriptions}
                 renderItem={({ item }) => <UpcomingSubscriptionCard {...item} />}
                 keyExtractor={(item) => item.id}
                 horizontal

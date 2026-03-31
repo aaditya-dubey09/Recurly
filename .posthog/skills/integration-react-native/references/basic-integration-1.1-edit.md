@@ -13,7 +13,7 @@ For each event, add useful properties, and use your access to the PostHog source
 
 Remember that you can find the source code for any dependency in the node_modules directory. This may be necessary to properly populate property names. There are also example project code files available via the PostHog MCP; use these for reference.
 
-Where possible, add calls for PostHog's identify() function on the client side upon events like logins and signups. Use the contents of login and signup forms to identify users on submit. If there is server-side code, pass the client-side session and distinct ID to the server-side code to identify the user. On the server side, make sure events have a matching distinct ID where relevant. 
+Where possible, add calls for PostHog's identify() function on the client side upon events like logins and signups. Only use non-sensitive identifiers (for example: email, username, user ID, or a generated distinct_id) when calling identify(). Never send passwords, OTPs, access tokens, or other secrets in identify() calls or event properties. If there is server-side code, only forward the minimal session/distinct_id and safe identifiers needed for attribution, and ensure server events use the same safe distinct_id. Hash or redact any potentially sensitive fields before sending.
 
 It's essential to do this in both client code and server code, so that user behavior from both domains is easy to correlate.
 
@@ -30,7 +30,6 @@ Status to report in this phase:
 - Inserting PostHog capture code
 - A status message for each file whose edits you are planning, including a high level summary of changes
 - A status message for each file you have edited
-
 
 ---
 

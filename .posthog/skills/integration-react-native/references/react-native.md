@@ -150,7 +150,7 @@ You can further customize how PostHog works through its configuration on initial
 
 | Attribute | Description |
 | --- | --- |
-| hostType: StringDefault: https://us.i.posthog.com | PostHog API host (usually https://us.i.posthog.com by default or https://eu.i.posthog.com). Host is optional if you use https://us.i.posthog.com. |
+| hostType: StringDefault: <https://us.i.posthog.com> | PostHog API host (usually <https://us.i.posthog.com> by default or <https://eu.i.posthog.com>). Host is optional if you use <https://us.i.posthog.com>. |
 | flushAtType: NumberDefault: 20 | The number of events to queue before sending to PostHog (flushing). |
 | flushIntervalType: NumberDefault: 10000 | The interval in milliseconds between periodic flushes. |
 | maxBatchSizeType: NumberDefault: 100 | The maximum number of queued messages to be flushed as part of a single batch (must be higher than flushAt). |
@@ -207,7 +207,7 @@ posthog.capture('user_signed_up', {
 
 ### Capturing screen views
 
-#### With `@react-navigation/native` and autocapture:
+#### With `@react-navigation/native` and autocapture
 
 When using [@react-navigation/native](https://reactnavigation.org/docs/6.x/getting-started) v6 or lower, screen tracking is automatically captured if the [`autocapture`](/docs/libraries/react-native.md#autocapture) property is used in the `PostHogProvider`:
 
@@ -271,7 +271,7 @@ const posthog = usePostHog() // use the usePostHog hook if using the PostHogProv
 posthog.screen(currentRouteName, params)
 ```
 
-#### With `react-native-navigation` and autocapture:
+#### With `react-native-navigation` and autocapture
 
 First, simplify the wrapping of your screens with a shared PostHogProvider:
 
@@ -325,7 +325,7 @@ Navigation.events().registerAppLaunchedListener(async () => {
 });
 ```
 
-#### With `expo-router`:
+#### With `expo-router`
 
 Check out and set it up the official way for [Screen tracking for analytics](https://docs.expo.dev/router/reference/screen-tracking/).
 
@@ -359,14 +359,14 @@ posthog.screen('dashboard', {
 
 PostHog autocapture can automatically track the following events for you:
 
--   **Application Opened** - when the app is opened from a closed state
--   **Application Became Active** - when the app comes to the foreground (e.g. from the app switcher)
--   **Application Backgrounded** - when the app is sent to the background by the user
--   **Application Installed** - when the app is installed.
--   **Application Updated** - when the app is updated.
--   **$screen** - when the user navigates (if using `@react-navigation/native` (v6 or lower) or `react-native-navigation`), check out the [capturing screen views](/docs/libraries/react-native.md#capturing-screen-views) section
--   **$autocapture** - touch events when the user interacts with the screen
--   **$exception** - when the app throws exceptions.
+- **Application Opened** - when the app is opened from a closed state
+- **Application Became Active** - when the app comes to the foreground (e.g. from the app switcher)
+- **Application Backgrounded** - when the app is sent to the background by the user
+- **Application Installed** - when the app is installed.
+- **Application Updated** - when the app is updated.
+- **$screen** - when the user navigates (if using `@react-navigation/native` (v6 or lower) or `react-native-navigation`), check out the [capturing screen views](/docs/libraries/react-native.md#capturing-screen-views) section
+- **$autocapture** - touch events when the user interacts with the screen
+- **$exception** - when the app throws exceptions.
 
 > ⚠️ **React Navigation v7 users**
 >
@@ -440,8 +440,8 @@ Using `identify`, you can associate events with specific users. This enables you
 
 An `identify` call has the following arguments:
 
--   **distinctId:** Required. A unique identifier for your user. Typically either their email or database ID.
--   **properties:** Optional. A dictionary with key:value pairs to set the [person properties](/docs/product-analytics/person-properties.md)
+- **distinctId:** Required. A unique identifier for your user. Typically either their email or database ID.
+- **properties:** Optional. A dictionary with key:value pairs to set the [person properties](/docs/product-analytics/person-properties.md)
 
 React Native
 
@@ -574,7 +574,7 @@ If you are doing this as part of a user logging out you can instead simply [`pos
 
 You can completely opt-out users from data capture. To do this, there are two options:
 
-1.  Opt users out by default by setting `opt_out_capturing_by_default` to `true` in your PostHog config:
+1. Opt users out by default by setting `opt_out_capturing_by_default` to `true` in your PostHog config:
 
 JavaScript
 
@@ -586,7 +586,7 @@ posthog.init('<ph_project_token>', {
 });
 ```
 
-2.  Opt users out on a per-person basis by calling `opt_out_capturing()`:
+1. Opt users out on a per-person basis by calling `opt_out_capturing()`:
 
 JavaScript
 
@@ -648,9 +648,9 @@ posthog.reset()
 
 The PostHog React Native SDK will continue to capture events when the device is offline. When `persistence` is set to `file` (by default), the events are stored in a queue in the device's file storage. Even when the app is closed, the events are persisted and will be flushed when the app is opened again.
 
--   The queue has a maximum size defined by `maxQueueSize` in the configuration.
--   When the queue is full, the oldest event is deleted first.
--   The queue is flushed only when the device is online.
+- The queue has a maximum size defined by `maxQueueSize` in the configuration.
+- When the queue is full, the oldest event is deleted first.
+- The queue is flushed only when the device is online.
 
 ## Opt in/out
 
@@ -678,8 +678,8 @@ PostHog's [feature flags](/docs/feature-flags.md) enable you to safely deploy an
 
 There are two ways to implement feature flags in React Native:
 
-1.  Using hooks.
-2.  Loading the flag directly.
+1. Using hooks.
+2. Loading the flag directly.
 
 ### Method 1: Using hooks
 
@@ -925,13 +925,13 @@ By default, we always override some properties based on the user IP address.
 
 The list of properties that this overrides:
 
-1.  $geoip\_city\_name
-2.  $geoip\_country\_name
-3.  $geoip\_country\_code
-4.  $geoip\_continent\_name
-5.  $geoip\_continent\_code
-6.  $geoip\_postal\_code
-7.  $geoip\_time\_zone
+1. $geoip\_city\_name
+2. $geoip\_country\_name
+3. $geoip\_country\_code
+4. $geoip\_continent\_name
+5. $geoip\_continent\_code
+6. $geoip\_postal\_code
+7. $geoip\_time\_zone
 
 This enables any geolocation-based flags to work without manually setting these properties.
 
@@ -974,7 +974,7 @@ Group analytics allows you to associate the events for that person's session wit
 
 > **Note:** This is a paid feature and is not available on the open-source or free cloud plan. Learn more on the [pricing page](/pricing.md).
 
--   Associate the events for this session with a group
+- Associate the events for this session with a group
 
 JavaScript
 
@@ -985,7 +985,7 @@ posthog.group('company', 'company_id_in_your_db')
 posthog.capture('upgraded_plan') // this event is associated with company ID `company_id_in_your_db`
 ```
 
--   Associate the events for this session with a group AND update the properties of that group
+- Associate the events for this session with a group AND update the properties of that group
 
 JavaScript
 
@@ -1047,10 +1047,10 @@ If you have both `PostHogErrorBoundary` and `console` capture enabled in your `e
 
 You can use the `before_send` callback to modify, filter, or suppress exception events before they are sent to PostHog. This is useful for:
 
--   Adding custom properties to exceptions
--   Overriding exception fingerprints for custom grouping
--   Suppressing specific types of exceptions
--   Redacting sensitive information
+- Adding custom properties to exceptions
+- Overriding exception fingerprints for custom grouping
+- Suppressing specific types of exceptions
+- Redacting sensitive information
 
 React Native
 
@@ -1103,10 +1103,10 @@ PostHog AI
 
 ```jsx
 <PostHogProvider
-    debug: {true}
     apiKey="<ph_project_token>"
     options={{
         host: "https://us.i.posthog.com",
+    debug: true,
     }}
 >
 ```
