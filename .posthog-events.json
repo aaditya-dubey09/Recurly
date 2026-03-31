@@ -1,0 +1,77 @@
+[
+  {
+    "event": "sign_up_submitted",
+    "description": "Fired when the user submits the sign-up form with valid credentials.",
+    "file": "app/(auth)/sign-up.tsx"
+  },
+  {
+    "event": "sign_up_failed",
+    "description": "Fired when a sign-up attempt fails due to an error returned by Clerk (e.g. email already in use, invalid password).",
+    "file": "app/(auth)/sign-up.tsx"
+  },
+  {
+    "event": "$exception",
+    "description": "Fired on sign-up API error to capture the Clerk error details for exception monitoring.",
+    "file": "app/(auth)/sign-up.tsx"
+  },
+  {
+    "event": "sign_up_email_verified",
+    "description": "Fired when the user successfully verifies their email address during sign-up.",
+    "file": "app/(auth)/sign-up.tsx"
+  },
+  {
+    "event": "sign_up_completed",
+    "description": "Fired when a new user account is fully created and the sign-up flow is complete.",
+    "file": "app/(auth)/sign-up.tsx"
+  },
+  {
+    "event": "sign_in_submitted",
+    "description": "Fired when the user submits the sign-in form with valid credentials.",
+    "file": "app/(auth)/sign-in.tsx"
+  },
+  {
+    "event": "sign_in_failed",
+    "description": "Fired when a sign-in attempt fails due to an error returned by Clerk (e.g. wrong password, account not found).",
+    "file": "app/(auth)/sign-in.tsx"
+  },
+  {
+    "event": "$exception",
+    "description": "Fired on sign-in API error to capture the Clerk error details for exception monitoring.",
+    "file": "app/(auth)/sign-in.tsx"
+  },
+  {
+    "event": "sign_in_completed",
+    "description": "Fired when the user successfully signs in and is redirected to the main app.",
+    "file": "app/(auth)/sign-in.tsx"
+  },
+  {
+    "event": "sign_out_clicked",
+    "description": "Fired when the user taps the Sign Out button on the Settings screen.",
+    "file": "app/(tabs)/settings.tsx"
+  },
+  {
+    "event": "subscription_expanded",
+    "description": "Fired when the user expands a subscription card on the Home screen to see more details. Includes subscription_id property.",
+    "file": "app/(tabs)/index.tsx"
+  },
+  {
+    "event": "subscription_collapsed",
+    "description": "Fired when the user collapses an expanded subscription card on the Home screen. Includes subscription_id property.",
+    "file": "app/(tabs)/index.tsx"
+  },
+  {
+    "event": "subscription_created",
+    "description": "Fired when a user creates a new subscription from the Home screen modal. Includes subscription metadata properties.",
+    "file": "app/(tabs)/index.tsx"
+  },
+  {
+    "event": "subscription_card_expanded",
+    "description": "Fired when the user expands a subscription card on the Home screen to see more details. Includes subscription_id property.",
+    "file": "app/(tabs)/index.tsx"
+  },
+  {
+    "event": "subscription_details_viewed",
+    "description": "Fired when the subscription details screen is mounted for a specific subscription. Includes subscription_id property.",
+    "file": "app/subscriptions/[id].tsx"
+  }
+]

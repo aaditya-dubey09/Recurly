@@ -1,6 +1,7 @@
 import { useSignIn } from '@clerk/expo';
 import { Link, useRouter, type Href } from 'expo-router';
 import { styled } from 'nativewind';
+import { usePostHog } from 'posthog-react-native';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context';
@@ -10,6 +11,7 @@ const SafeAreaView = styled(RNSafeAreaView);
 const SignIn = () => {
     const { signIn, errors, fetchStatus } = useSignIn();
     const router = useRouter();
+    const posthog = usePostHog();
 
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
@@ -24,8 +26,39 @@ const SignIn = () => {
     const passwordValid = password.length > 0;
     const formValid = emailAddress.length > 0 && password.length > 0 && emailValid;
 
+    const completeSignIn = async () => {
+        posthog.identify(emailAddress, {
+            email: emailAddress,
+        });
+        posthog.capture('sign_in_completed');
+
+        await signIn.finalize({
+            navigate: ({ session, decorateUrl }) => {
+                if (session?.currentTask) {
+                    console.log(session?.currentTask);
+                    return;
+                }
+
+                const url = decorateUrl('/(tabs)');
+                if (url.startsWith('http')) {
+                    // Only use window.location on web platform
+                    if (typeof window !== 'undefined' && window.location) {
+                        window.location.href = url;
+                    } else {
+                        // On native, just use router navigation
+                        router.replace('/(tabs)' as Href);
+                    }
+                } else {
+                    router.replace(url as Href);
+                }
+            },
+        });
+    };
+
     const handleSubmit = async () => {
         if (!formValid) return;
+
+        posthog.capture('sign_in_submitted');
 
         const { error } = await signIn.password({
             emailAddress,
@@ -33,32 +66,20 @@ const SignIn = () => {
         });
 
         if (error) {
+            posthog.capture('sign_in_failed');
+            posthog.capture('$exception', {
+                $exception_list: [{
+                    type: error.code ?? 'ClerkError',
+                    value: error.message ?? 'Sign-in failed',
+                }],
+                $exception_source: 'react-native',
+            });
             console.error(JSON.stringify(error, null, 2));
             return;
         }
 
         if (signIn.status === 'complete') {
-            await signIn.finalize({
-                navigate: ({ session, decorateUrl }) => {
-                    if (session?.currentTask) {
-                        console.log(session?.currentTask);
-                        return;
-                    }
-
-                    const url = decorateUrl('/(tabs)');
-                    if (url.startsWith('http')) {
-                        // Only use window.location on web platform
-                        if (typeof window !== 'undefined' && window.location) {
-                            window.location.href = url;
-                        } else {
-                            // On native, just use router navigation
-                            router.replace('/(tabs)' as Href);
-                        }
-                    } else {
-                        router.replace(url as Href);
-                    }
-                },
-            });
+            await completeSignIn();
         } else if (signIn.status === 'needs_second_factor') {
             // Handle MFA if needed (not implemented in this basic flow)
             console.log('MFA required');
@@ -80,32 +101,25 @@ const SignIn = () => {
         const { error } = await signIn.mfa.verifyEmailCode({ code });
 
         if (error) {
+            posthog.capture('sign_in_failed', {
+                method: 'mfa',
+                email: emailAddress,
+            });
+            posthog.capture('$exception', {
+                $exception_list: [{
+                    type: error.code ?? 'ClerkError',
+                    value: error.message ?? 'MFA verification failed',
+                }],
+                $exception_source: 'react-native',
+                method: 'mfa',
+                email: emailAddress,
+            });
             console.error('Verification failed:', JSON.stringify(error, null, 2));
             return;
         }
 
         if (signIn.status === 'complete') {
-            await signIn.finalize({
-                navigate: ({ session, decorateUrl }) => {
-                    if (session?.currentTask) {
-                        console.log(session?.currentTask);
-                        return;
-                    }
-
-                    const url = decorateUrl('/(tabs)');
-                    if (url.startsWith('http')) {
-                        // Only use window.location on web platform
-                        if (typeof window !== 'undefined' && window.location) {
-                            window.location.href = url;
-                        } else {
-                            // On native, just use router navigation
-                            router.replace('/(tabs)' as Href);
-                        }
-                    } else {
-                        router.replace(url as Href);
-                    }
-                },
-            });
+            await completeSignIn();
         } else {
             console.error('Sign-in attempt not complete:', signIn);
         }
@@ -284,7 +298,7 @@ const SignIn = () => {
 
                         {/* Sign-Up Link */}
                         <View className="auth-link-row">
-                            <Text className="auth-link-copy">Don't have an account?</Text>
+                            <Text className="auth-link-copy">{"Don't have an account?"}</Text>
                             <Link href="/(auth)/sign-up" asChild>
                                 <Pressable>
                                     <Text className="auth-link">Create Account</Text>
