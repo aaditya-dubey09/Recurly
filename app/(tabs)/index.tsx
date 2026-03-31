@@ -11,12 +11,20 @@ import dayjs from "dayjs";
 import { styled } from "nativewind";
 import { useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
+import { usePostHog } from "posthog-react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
+/**
+ * Render the Home screen containing the user header, account balance, upcoming renewals carousel, and the list of all subscriptions.
+ *
+ * @returns The rendered React element representing the Home screen UI.
+ */
+
 export default function App() {
   const { user } = useUser();
+  const posthog = usePostHog();
   const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<string | null>(null);
 
   // Get user display name: firstName, fullName, or email
@@ -74,7 +82,13 @@ export default function App() {
           <SubscriptionCard
             {...item}
             expanded={expandedSubscriptionId === item.id}
-            onPress={() => setExpandedSubscriptionId((currentId) => (currentId === item.id ? null : item.id))}
+            onPress={() => {
+            const isExpanded = expandedSubscriptionId === item.id;
+            if (!isExpanded) {
+              posthog.capture('subscription_card_expanded', { subscription_id: item.id });
+            }
+            setExpandedSubscriptionId(isExpanded ? null : item.id);
+          }}
           />
         )}
         extraData={expandedSubscriptionId}

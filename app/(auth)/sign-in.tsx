@@ -4,12 +4,14 @@ import { styled } from 'nativewind';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context';
+import { usePostHog } from 'posthog-react-native';
 
 const SafeAreaView = styled(RNSafeAreaView);
 
 const SignIn = () => {
     const { signIn, errors, fetchStatus } = useSignIn();
     const router = useRouter();
+    const posthog = usePostHog();
 
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
@@ -27,17 +29,32 @@ const SignIn = () => {
     const handleSubmit = async () => {
         if (!formValid) return;
 
+        posthog.capture('sign_in_submitted');
+
         const { error } = await signIn.password({
             emailAddress,
             password,
         });
 
         if (error) {
+            posthog.capture('sign_in_failed');
+            posthog.capture('$exception', {
+                $exception_list: [{
+                    type: error.code ?? 'ClerkError',
+                    value: error.message ?? 'Sign-in failed',
+                }],
+                $exception_source: 'react-native',
+            });
             console.error(JSON.stringify(error, null, 2));
             return;
         }
 
         if (signIn.status === 'complete') {
+            posthog.identify(signIn.createdSessionId ?? emailAddress, {
+                email: emailAddress,
+            });
+            posthog.capture('sign_in_completed');
+
             await signIn.finalize({
                 navigate: ({ session, decorateUrl }) => {
                     if (session?.currentTask) {
@@ -85,6 +102,11 @@ const SignIn = () => {
         }
 
         if (signIn.status === 'complete') {
+            posthog.identify(signIn.createdSessionId ?? emailAddress, {
+                email: emailAddress,
+            });
+            posthog.capture('sign_in_completed');
+
             await signIn.finalize({
                 navigate: ({ session, decorateUrl }) => {
                     if (session?.currentTask) {
@@ -284,7 +306,7 @@ const SignIn = () => {
 
                         {/* Sign-Up Link */}
                         <View className="auth-link-row">
-                            <Text className="auth-link-copy">Don't have an account?</Text>
+                            <Text className="auth-link-copy">{"Don't have an account?"}</Text>
                             <Link href="/(auth)/sign-up" asChild>
                                 <Pressable>
                                     <Text className="auth-link">Create Account</Text>

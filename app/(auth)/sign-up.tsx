@@ -4,6 +4,7 @@ import { styled } from 'nativewind';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context';
+import { usePostHog } from 'posthog-react-native';
 
 const SafeAreaView = styled(RNSafeAreaView);
 
@@ -11,6 +12,7 @@ const SignUp = () => {
     const { signUp, errors, fetchStatus } = useSignUp();
     const { isSignedIn } = useAuth();
     const router = useRouter();
+    const posthog = usePostHog();
 
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
@@ -28,12 +30,22 @@ const SignUp = () => {
     const handleSubmit = async () => {
         if (!formValid) return;
 
+        posthog.capture('sign_up_submitted');
+
         const { error } = await signUp.password({
             emailAddress,
             password,
         });
 
         if (error) {
+            posthog.capture('sign_up_failed');
+            posthog.capture('$exception', {
+                $exception_list: [{
+                    type: error.code ?? 'ClerkError',
+                    value: error.message ?? 'Sign-up failed',
+                }],
+                $exception_source: 'react-native',
+            });
             console.error(JSON.stringify(error, null, 2));
             return;
         }
@@ -54,7 +66,14 @@ const SignUp = () => {
             return;
         }
 
+        posthog.capture('sign_up_email_verified');
+
         if (signUp.status === 'complete') {
+            posthog.identify(signUp.createdUserId ?? emailAddress, {
+                email: emailAddress,
+            });
+            posthog.capture('sign_up_completed');
+
             await signUp.finalize({
                 navigate: ({ session, decorateUrl }) => {
                     if (session?.currentTask) {

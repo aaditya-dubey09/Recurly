@@ -3,15 +3,19 @@ import { useClerk, useUser } from '@clerk/expo';
 import { styled } from "nativewind";
 import { Image, Pressable, Text, View } from 'react-native';
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
+import { usePostHog } from 'posthog-react-native';
 const SafeAreaView = styled(RNSafeAreaView);
 
 const Settings = () => {
     const { signOut } = useClerk();
     const { user } = useUser();
+    const posthog = usePostHog();
 
     // using clerk to sign out as we signed in with that too
     const handleSignOut = async () => {
         try {
+            posthog.capture('sign_out_clicked');
+            posthog.reset();
             await signOut();
         } catch (error) {
             console.error('Error signing out:', error);
