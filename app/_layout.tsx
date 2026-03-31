@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { ClerkProvider, useAuth } from '@clerk/expo';
 import { tokenCache } from '@clerk/expo/token-cache';
 import { PostHogProvider } from 'posthog-react-native';
-import { posthog } from '@/lib/posthog';
+import { posthog } from '@/config/posthog';
 
 SplashScreen.preventAutoHideAsync();
 
